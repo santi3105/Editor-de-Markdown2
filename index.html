@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor Markdown</title>
+
+<!-- Hoja de estilos: define colores, tamaños y la distribución en dos columnas -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===================== BARRA SUPERIOR ===================== -->
+  <header class="topbar">
+
+    <div class="brand">
+      <span class="brand-mark">#</span>
+      <span class="brand-text">Editor Markdown</span>
+    </div>
+
+    <!-- Contenedor de botones: escuchamos UN solo evento de clic aquí
+        (ver main.mjs) en vez de uno por cada botón. Cada botón dice
+        su acción en data-action. -->
+    <div class="actions" id="toolbar">
+      <!-- Región "viva": los lectores de pantalla anuncian el cambio
+          de texto automáticamente, sin que el usuario tenga que
+          volver a enfocar el elemento -->
+      <span class="status" id="status" aria-live="polite">guardado</span>
+
+      <button class="btn" id="btnAyuda" aria-expanded="false" aria-controls="ayuda-panel">
+        Ayuda
+      </button>
+
+      <button class="btn" data-action="abrir">Abrir .md</button>
+      <input type="file" id="fileInput" accept=".md,.markdown,.txt" hidden>
+
+      <button class="btn" data-action="descargar-md">Descargar .md</button>
+      <button class="btn" data-action="cita">Insertar cita</button>
+      <button class="btn btn-primary" data-action="exportar-pdf">Exportar PDF</button>
+    </div>
+  </header>
+
+  <!-- Panel de ayuda: empieza oculto de verdad (hidden), no solo con CSS.
+      btnAyuda lo abre/cierra y actualiza aria-expanded en cada clic
+      (ver main.mjs). -->
+  <div id="ayuda-panel" class="ayuda-panel" hidden>
+    <table class="ayuda-tabla">
+      <thead>
+        <tr><th>Escribes</th><th>Se convierte en</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code># Título</code></td><td>Encabezado grande</td></tr>
+        <tr><td><code>**negrita**</code></td><td>Texto en negrita</td></tr>
+        <tr><td><code>- item</code></td><td>Lista con viñetas</td></tr>
+        <tr><td><code>```código```</code></td><td>Bloque de código</td></tr>
+        <tr><td><code>&gt; cita</code></td><td>Cita con línea lateral</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===================== ÁREA DE TRABAJO ===================== -->
+  <main class="workspace">
+
+    <section class="pane pane-editor">
+      <div class="pane-label">Editor</div>
+      <textarea id="editor" spellcheck="false" aria-label="Editor de Markdown"
+        placeholder="# Escribe tu Markdown aquí..."></textarea>
+    </section>
+
+    <section class="pane pane-preview">
+      <div class="pane-label">Vista previa</div>
+      <div id="preview" class="preview-content" aria-label="Vista previa del documento"></div>
+    </section>
+  </main>
+
+  <!-- ===================== LIBRERÍAS EXTERNAS (LOCALES) ===================== -->
+  <!-- Scripts clásicos: crean variables globales (marked, DOMPurify,
+      html2pdf) que los módulos .mjs usan más abajo. Deben cargar
+      ANTES que main.mjs. -->
+  <script src="libs/marked.umd.js"></script>
+  <script src="libs/purify.min.js"></script>
+  <script src="libs/html2pdf.bundle.min.js"></script>
+
+  <!-- Nuestro propio código, organizado en módulos ES (.mjs).
+      type="module" permite usar import/export entre archivos. -->
+  <script type="module" src="main.mjs"></script>
+</body>
+</html>

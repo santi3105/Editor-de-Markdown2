@@ -1,0 +1,283 @@
+/* ===================== VARIABLES DE COLOR ===================== */
+/* Definir los colores aquí (una sola vez) permite cambiar el tema
+  completo de la app editando solo estas líneas, sin buscar
+    colores repetidos por todo el archivo. */
+:root {
+  --bg: #1b1d1f;            /* fondo general oscuro */
+  --bg-pane: #232629;       /* fondo de la barra superior */
+  --border: #34383c;        /* color de bordes/separadores */
+  --text: #e7e5e0;          /* color del texto principal (claro) */
+  --text-dim: #9a9a94;      /* texto secundario, menos importante */
+  --accent: #5fb37c;        /* color verde de acento (botón principal) */
+  --accent-dim: #3e7d55;    /* variante más oscura del acento */
+  --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+
+/* Reset básico: todos los elementos miden su ancho/alto incluyendo
+   el padding y el borde (evita cálculos raros de tamaño) */
+* { box-sizing: border-box; }
+
+/* La página ocupa el 100% del alto de la pantalla, sin márgenes
+   por defecto del navegador */
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+/* ===================== BARRA SUPERIOR ===================== */
+.topbar {
+  display: flex;                    /* logo a la izquierda, botones a la derecha */
+  align-items: center;
+  justify-content: space-between;   /* empuja los dos grupos a los extremos */
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-pane);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.brand-mark {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.brand-text {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+}
+
+.actions {
+  display: flex;         /* pone todos los botones en fila, uno al lado del otro */
+  align-items: center;
+  gap: 0.6rem;            /* espacio entre cada botón */
+}
+
+.status {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-right: 0.4rem;
+}
+
+/* Estilo base compartido por TODOS los botones */
+.btn {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;                                        /* mano al pasar el mouse */
+  transition: border-color 0.15s ease, background 0.15s ease; /* animación suave al hover */
+}
+
+.btn:hover {
+  border-color: var(--text-dim);
+}
+
+/* Contorno visible cuando se navega con el teclado (accesibilidad) */
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Variante especial para el botón "Exportar PDF": se resalta en verde
+   porque es la acción principal/más importante de la app */
+.btn-primary {
+  background: var(--accent-dim);
+  border-color: var(--accent-dim);
+  color: #f2fbf5;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ===================== ÁREA DE TRABAJO (2 COLUMNAS) ===================== */
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* dos columnas de igual ancho (50%/50%) */
+  height: calc(100vh - 58px);       /* ocupa todo el alto restante debajo de la barra */
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;   /* label arriba, contenido abajo, apilados verticalmente */
+  min-width: 0;
+  min-height: 0;
+}
+
+.pane-editor {
+  border-right: 1px solid var(--border);  /* línea divisoria entre editor y vista previa */
+}
+
+.pane-label {
+  font-size: 0.7rem;
+  text-transform: lowercase;
+  color: var(--text-dim);
+  padding: 0.5rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.03em;
+}
+
+/* El textarea donde el usuario escribe Markdown */
+#editor {
+  flex: 1;              /* ocupa todo el espacio vertical disponible */
+  resize: none;         /* el usuario no puede arrastrar para agrandar/achicar */
+  border: none;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  padding: 1.25rem;
+  outline: none;         /* quita el borde azul feo que pone el navegador al hacer foco */
+  tab-size: 2;           /* si el usuario presiona Tab, avanza 2 espacios */
+}
+
+/* La columna de vista previa usa fondo claro (como una hoja de papel),
+   a diferencia del resto de la app que es oscura */
+.pane-preview {
+  background: #fbfaf7;
+  color: #1c1c1a;
+}
+
+.preview-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem 2.5rem;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  max-width: 72ch;
+  background: #fbfaf7;
+  color: #1c1c1a;
+}
+
+/* ---- Estilos del HTML generado dentro de la vista previa ---- */
+/* Estas reglas no afectan el editor: solo el HTML que marked.js
+   inyecta dentro de #preview (títulos, código, tablas, etc.) */
+
+.preview-content h1,
+.preview-content h2,
+.preview-content h3 {
+  font-family: var(--serif);
+  line-height: 1.25;
+  margin-top: 1.4em;
+  margin-bottom: 0.4em;
+}
+
+.preview-content h1 { font-size: 1.9rem; border-bottom: 1px solid #ddd8cd; padding-bottom: 0.3rem; }
+.preview-content h2 { font-size: 1.45rem; }
+.preview-content h3 { font-size: 1.15rem; }
+
+.preview-content p { margin: 0.7em 0; }
+
+/* Código en línea, tipo `esto` */
+.preview-content code {
+  font-family: var(--mono);
+  background: #eeece3;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.88em;
+}
+
+/* Bloques de código de varias líneas, tipo ```esto``` */
+.preview-content pre {
+  background: #22252a;
+  color: #e7e5e0;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;      /* scroll horizontal si una línea de código es muy larga */
+}
+
+/* Dentro de un bloque <pre>, el <code> no debe repetir el fondo/padding */
+.preview-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* Citas tipo > esto */
+.preview-content blockquote {
+  border-left: 3px solid var(--accent-dim);
+  margin: 1em 0;
+  padding: 0.2em 1em;
+  color: #4a4a44;
+  background: #f2f0e8;
+}
+
+/* Tablas generadas desde sintaxis Markdown de tablas */
+.preview-content table {
+  border-collapse: collapse;   /* evita doble línea entre celdas */
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.92em;
+}
+
+.preview-content th,
+.preview-content td {
+  border: 1px solid #ddd8cd;
+  padding: 0.4em 0.7em;
+  text-align: left;
+}
+
+.preview-content img { max-width: 100%; }  /* las imágenes nunca se salen del panel */
+
+.preview-content a { color: var(--accent-dim); }
+
+/* ===================== RESPONSIVE (pantallas angostas) ===================== */
+/* Si la pantalla mide 860px o menos (celular/tablet), las dos columnas
+   dejan de estar lado a lado y pasan a apilarse una encima de la otra */
+@media (max-width: 860px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .pane-editor {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+/* ===================== PANEL DE AYUDA (ARIA) ===================== */
+.ayuda-panel {
+  background: var(--bg-pane);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.25rem;
+}
+
+.ayuda-tabla {
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+.ayuda-tabla th,
+.ayuda-tabla td {
+  text-align: left;
+  padding: 0.3rem 1rem 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.ayuda-tabla code {
+  font-family: var(--mono);
+  background: #2a2d30;
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
